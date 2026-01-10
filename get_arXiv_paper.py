@@ -19,7 +19,7 @@ def fetch_latest_arxiv(category="cs.CL", max_results=3):
             "title"     : entry.title.replace("\n", " "),
             "summary"   : entry.summary.replace("\n", " "),
             "authors"   : [author.name for author in entry.authors],
-            "authors"       : entry.link,
+            "url"       : entry.link,
             "published" : entry.published
         })
     return papers
