@@ -1,0 +1,6 @@
+# please "pip install -r requirements.txt"
+
+feedparser # arXiv API
+requests # Qiita API
+openai # 翻訳
+python-dotenv # API管理
