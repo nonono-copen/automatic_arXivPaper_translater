@@ -4,3 +4,4 @@ feedparser # arXiv API
 requests # Qiita API
 openai # 翻訳
 python-dotenv # API管理
+ollama # 要約・翻訳用AI
