@@ -3,19 +3,14 @@
 This source is an efficiency tool for arXiv paper.
 This tool summarizes the latest papers submitted in designated categories on arXiv in Yoichi Ochiai's format and summarizes them in Japanese.
 
-arXivの指定カテゴリで投稿された最新論文を、落合陽一フォーマットで要約し、日本語に要約することで、論文をより早く読むツールである。
+arXivの指定カテゴリで投稿された最新論文を、落合陽一フォーマットで要約し、日本語に翻訳することで、論文をより早く読むツールである。
 
 参考：[高速で論文がバリバリ読める落合先生のフォーマットがいい感じだったのでメモ](https://lafrenze.hatenablog.com/entry/2015/08/04/120205)
 
 ## Setup/
-### 1. Install library/ライブラリセットアップ
+### 1. Install library & Setup ollama AI/ライブラリやollamaのセットアップ
 ```
-pip install -r requirements.txt
-```
-
-### 2. Setup ollama AI/ollamaのセットアップ
-```
-./setup.sh # install ollama AI models
+./setup.sh
 ```
 
 ## Execution/実行方法

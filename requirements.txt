@@ -1,5 +1,4 @@
-# please "pip install -r requirements.txt"
-
+# please "pip install -r requirements.txt" with setup.sh
 feedparser # arXiv API
 requests # Qiita API
 openai # 翻訳

@@ -7,6 +7,7 @@
 
 import feedparser
 
+
 def fetch_latest_arxiv(category="cs.CL", max_results=3):
     query = f"http://export.arxiv.org/api/query?search_query=cat:{category}&sortBy=submittedDate&sortOrder=descending&max_results={max_results}"
     feed = feedparser.parse(query)
@@ -22,3 +23,7 @@ def fetch_latest_arxiv(category="cs.CL", max_results=3):
             "published" : entry.published
         })
     return papers
+
+def get_fist_image(paper):
+
+
