@@ -5,7 +5,12 @@ from   dotenv   import load_dotenv
 QIITA_API_URL = "https://qiita.com/api/v2/items"
 QIITA_TOKEN = os.getenv("QIITA_TOKEN")
 
-def to_qiita_md(i, arxiv_url, title, authors, summary):
+if not QIITA_TOKEN:
+    raise RuntimeError("QIITA_TOKEN is not set")
+
+QIITA_TOKEN = QIITA_TOKEN.strip()  # 空白や改行を削除
+
+def to_qiita_md(arxiv_id, arxiv_url, title, authors, summary, published):
 #     return f"""
 # ---
 # ## 論文情報
@@ -24,7 +29,8 @@ def to_qiita_md(i, arxiv_url, title, authors, summary):
 ## 論文情報
 - 著者  :{", ".join(auth for auth in authors)}
 - 公開日:{published}
-- arXiv:{arxiv_url}
+- arXiv_ID:{arxiv_id}
+- URL:{arxiv_url}
 ---
 ※本記事は arXiv 論文の非公式な自動翻訳・要約です。
 """
@@ -53,10 +59,9 @@ def post_to_qiita(title, body, tags, private=False):
         print(response.text)
         return None
 
-if __name__ == "main":
+if __name__ == '__main__':
     # test
     print(QIITA_TOKEN)
-s    # tst = post_to_qiita(title="Test", body)
 
     title = "テスト投稿：arXiv論文自動要約"
     body = """

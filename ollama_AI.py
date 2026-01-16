@@ -3,8 +3,9 @@
 #######################################################################
 import ollama
 
-MODEL_SUMMARY   = "phi3:mini" # 軽量モデル
-MODEL_TRANSLATE = "qwen2.5"   # 日本語翻訳・整形で中規模モデルの中で事故りにくい
+# MODEL_SUMMARY   = "phi3:mini" # 軽量モデル
+# MODEL_TRANSLATE = "qwen2.5"   # 日本語翻訳・整形で中規模モデルの中で事故りにくい
+MODEL = "qwen2.5:1.5b"
 
 # --- Step 1: 英語要約 ---
 #######################################################################
@@ -44,7 +45,7 @@ MODEL_TRANSLATE = "qwen2.5"   # 日本語翻訳・整形で中規模モデルの
 # --- Step 2: 構造化要約（英語） ---
 def structure_summary_en(summary: str) -> str:
     res = ollama.chat(
-        model=MODEL_SUMMARY,
+        model=MODEL,
         messages=[
             {
                 "role": "system",
@@ -77,7 +78,7 @@ def structure_summary_en(summary: str) -> str:
 #######################################################################
 def translate_ja(text: str) -> str:
     res = ollama.chat(
-        model=MODEL_TRANSLATE,
+        model=MODEL,
         messages=[
             {
                 "role": "system",

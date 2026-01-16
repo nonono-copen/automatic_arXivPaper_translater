@@ -7,12 +7,12 @@
 #######################################################################
 from get_arXiv_paper import fetch_latest_arxiv
 from ollama_AI       import structure_summary_en, translate_ja
-from qiita_publish   import to_qiita_md
+from qiita_publish   import to_qiita_md, post_to_qiita
 from post_log        import init_csv, is_already_posted, log_post
 
 # --- 定数 ---
 CATEGORY = "cs.CV"
-MAX      = 3
+MAX      = 1
 
 # 管理ファイルチェック
 init_csv()
@@ -47,11 +47,22 @@ for p in papers:
     # CHARANGE:論文内の1枚目画像を抽出
 
     # markdownに変換 ＆ Qiita apiで投稿
-    md = to_qiita_md(arxiv_id=p["id"], title=p["title"], authors=p["authors"], summary=summary_ja)
-    print(md)  # ← Qiita投稿前の最終成果物
+    md = to_qiita_md(arxiv_id=p["id"],arxiv_url=p["url"], title=p["title"], authors=p["authors"], summary=summary_ja, published=p["published"])
+    # print(md)  # ← Qiita投稿前の最終成果物
+    TAGS = ["arXiv", "論文", "自動投稿"]
+
+    url = post_to_qiita(title  ='arXiv論文自動要約(test)',
+                        body   =summary_ja,
+                        tags   =TAGS,
+                        private=True)
+
+    if url == None:
+        status = False
+    else:
+        status = True
 
     # 管理ファイルに投稿内容を記録｀
-    log_post(p["id"], p["title"], summary_ja, "dummy", "test")
+    log_post(arxiv_id=p["id"], title=p["title"], summary_ja=summary_ja, qiita_url=url, status=status)
 
     
 

@@ -24,6 +24,4 @@ def fetch_latest_arxiv(category="cs.CL", max_results=3):
         })
     return papers
 
-def get_fist_image(paper):
-
-
+# def get_fist_image(paper):
