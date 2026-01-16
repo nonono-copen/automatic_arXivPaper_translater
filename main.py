@@ -52,7 +52,7 @@ for p in papers:
     TAGS = ["arXiv", "論文", "自動投稿"]
 
     url = post_to_qiita(title  ='arXiv論文自動要約(test)',
-                        body   =summary_ja,
+                        body   =md,
                         tags   =TAGS,
                         private=True)
 
