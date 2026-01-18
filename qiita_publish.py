@@ -1,6 +1,5 @@
 import os
 import requests
-from   dotenv   import load_dotenv
 
 QIITA_API_URL = "https://qiita.com/api/v2/items"
 QIITA_TOKEN = os.getenv("QIITA_TOKEN")
@@ -11,28 +10,16 @@ if not QIITA_TOKEN:
 QIITA_TOKEN = QIITA_TOKEN.strip()  # 空白や改行を削除
 
 def to_qiita_md(arxiv_id, arxiv_url, title, authors, summary, published):
-#     return f"""
-# ---
-# ## 論文情報
-# - **Title**: {title}
-# - **Authors**: {", ".join(auth for auth in authors)}
-# - **arXiv**: {arxiv_url}
-# ## 論文概要（自動要約）
-# {summary}
-# """
     return f"""
 # 論文紹介:{title}
-
-## 概要（自動翻訳・要約）
-{summary}
-
-## 論文情報
 - 著者  :{", ".join(auth for auth in authors)}
+## 自動要約・翻訳情報
+{summary}
+## 論文情報
 - 公開日:{published}
 - arXiv_ID:{arxiv_id}
 - URL:{arxiv_url}
 ---
-※本記事は arXiv 論文の非公式な自動翻訳・要約です。
 """
 
 def post_to_qiita(title, body, tags, private=False):

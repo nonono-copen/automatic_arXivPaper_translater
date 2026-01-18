@@ -86,7 +86,16 @@ def translate_ja(text: str) -> str:
             },
             {
                 "role": "user",
-                "content": f"Translate the following text into Japanese:\n{text}"
+                "content": f"""
+                            Translate the following text into Japanese:\n{text}
+                            Do NOT add assumptions.
+                            Format:
+                                ##概要:
+                                ##従来の先行研究と比べてどこがすごい？:
+                                ##技術や手法のキモはどこ:
+                                ##どうやって有効だと検証した:
+                                ##議論や課題は？:
+                            """
             }
         ],
         options={"temperature": 0.2}

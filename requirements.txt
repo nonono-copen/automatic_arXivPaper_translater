@@ -1,4 +1,7 @@
 # please "pip install -r requirements.txt" with setup.sh
 feedparser # arXiv API
 requests # Qiita API
+requests
+pymupdf
+pillow
 ollama # 要約・翻訳用AI
