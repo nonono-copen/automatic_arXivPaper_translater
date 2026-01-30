@@ -2,25 +2,55 @@ import os
 import requests
 
 QIITA_API_URL = "https://qiita.com/api/v2/items"
-QIITA_TOKEN = os.getenv("QIITA_TOKEN")
+#QIITA_TOKEN = os.getenv("QIITA_TOKEN")
 
 if not QIITA_TOKEN:
     raise RuntimeError("QIITA_TOKEN is not set")
 
 QIITA_TOKEN = QIITA_TOKEN.strip()  # 空白や改行を削除
 
-def to_qiita_md(arxiv_id, arxiv_url, title, authors, summary, published):
+
+def make_intro_md(date):
     return f"""
-# 論文紹介:{title}
+# はじめに／注意書き
+本記事は、arXivのComputer Vision & Pattern Recognitionの最新論文を自動取得し、AIで自動要約＆翻訳したものを自動投稿している。
+仕組み：xxxx
+
+論文は{date}時点のarXiv最新論文であることに留意!!
+また、AIで要約＆翻訳されているため、内容を鵜呑みにせず、しっかりと自分の目で見極めてほしい。
+注意書きは以上！今回の論文紹介にうつる！
+"""
+
+def to_qiita_md(arxiv_id, arxiv_url, title, authors, summary_ja, published,original_s):
+    md = f"""
+# {title}
 - 著者  :{", ".join(auth for auth in authors)}
-## 自動要約・翻訳情報
-{summary}
+## 概要
+{summary_ja["overview"]}
+
+## 従来研究と比べて何が新しい？
+{summary_ja["novelty"]}
+
+## 技術・手法のキモ
+{summary_ja["key_method"]}
+
+## 有効性の検証方法
+{summary_ja["evaluation"]}
+
+## 議論・課題
+{summary_ja["limitations"]}
+
 ## 論文情報
 - 公開日:{published}
 - arXiv_ID:{arxiv_id}
 - URL:{arxiv_url}
+
+<details><summary>原文サマリ</summary>
+{original_s}
+</details>
 ---
 """
+    return md
 
 def post_to_qiita(title, body, tags, private=False):
     headers = {
@@ -45,6 +75,8 @@ def post_to_qiita(title, body, tags, private=False):
         print(response.status_code)
         print(response.text)
         return None
+
+
 
 if __name__ == '__main__':
     # test
