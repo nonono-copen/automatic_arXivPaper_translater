@@ -1,7 +1,8 @@
 # please "pip install -r requirements.txt" with setup.sh
 feedparser # arXiv API
-requests # Qiita API
+requests   # Qiita API
 requests
-pymupdf
-pillow
-ollama # 要約・翻訳用AI
+pymupdf    # pdfをあつかえるようにするため（今後の開発用） 
+pillow     # 画像用（今後の開発用）
+ollama     # 要約・翻訳用AI
+tqdm       # 進捗可視化

@@ -2,7 +2,7 @@ import os
 import requests
 
 QIITA_API_URL = "https://qiita.com/api/v2/items"
-#QIITA_TOKEN = os.getenv("QIITA_TOKEN")
+QIITA_TOKEN = os.getenv("QIITA_TOKEN") # 環境変数からQiitaトークンを取得
 
 if not QIITA_TOKEN:
     raise RuntimeError("QIITA_TOKEN is not set")
@@ -16,9 +16,9 @@ def make_intro_md(date):
 本記事は、arXivのComputer Vision & Pattern Recognitionの最新論文を自動取得し、AIで自動要約＆翻訳したものを自動投稿している。
 仕組み：xxxx
 
-論文は{date}時点のarXiv最新論文であることに留意!!
-また、AIで要約＆翻訳されているため、内容を鵜呑みにせず、しっかりと自分の目で見極めてほしい。
-注意書きは以上！今回の論文紹介にうつる！
+論文は{date}時点のarXiv最新論文である。
+AIで要約＆翻訳されているため、一部翻訳されていなかったり、間違った表現や内容になっている。
+鵜呑みにせず、しっかりと自分の目で見極めてほしい。注意書きは以上！
 """
 
 def to_qiita_md(arxiv_id, arxiv_url, title, authors, summary_ja, published,original_s):
@@ -48,7 +48,6 @@ def to_qiita_md(arxiv_id, arxiv_url, title, authors, summary_ja, published,origi
 <details><summary>原文サマリ</summary>
 {original_s}
 </details>
----
 """
     return md
 

@@ -55,11 +55,11 @@ def warmup_model():
             options={"temperature": 0}
         )
 
-        ollama.generate(
-            model=MODEL_TRANSLATE,
-            prompt="warmup",
-            options={"temperature": 0}
-        )
+        # ollama.generate(
+        #     model=MODEL_TRANSLATE,
+        #     prompt="warmup",
+        #     options={"temperature": 0}
+        # )
     except:
         pass
 
@@ -120,17 +120,19 @@ def translate_text_ja(text: str) -> str:
         === TEXT END ===
     """
     res = ollama.generate(
-        model=MODEL_TRANSLATE,
+        # model=MODEL_TRANSLATE,
+        model   = MODEL_SUMMARY, # Codespaces等の軽量環境向けに軽量モデルを使用
         prompt=prompt,
         stream=True,
         options={"temperature": 0.2}
     )
     result = progress_display(res)
 
-    # return res.get("response", "").strip()
     return result
 
-def translate_json_ja_ultra_safe(data: dict) -> dict:
+
+
+def translate_json_ja(data: dict) -> dict:
     translated = {}
     for key in ["overview", "novelty", "key_method", "evaluation", "limitations"]:
         value = data.get(key, "")
@@ -145,7 +147,6 @@ if __name__ == "__main__":
     #     prompt = PROMPT,
     #     stream = True,
     # )
-
     # result = progress_display(stream)
 
     sample_text = """
@@ -156,4 +157,4 @@ if __name__ == "__main__":
     summary_en = structure_summary_en(sample_text)
     print(type(summary_en))
     # 要約した文章群を翻訳 with ollama
-    summary_ja = translate_json_ja_ultra_safe(summary_en)
+    summary_ja = translate_json_ja(summary_en)
