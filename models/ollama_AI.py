@@ -43,18 +43,18 @@ def progress_display(stream):
     # ===== 生成完了後 =====
     result_text = "".join(result_chunks)
 
-    print("\n=== Generation Result ===\n")
+    print("\n=== Generation Result ===")
     print(result_text)
     return result_text
 
 def warmup_model():
+    print("Start warmup models")
     try:
-        ollama.generate(
+        res=ollama.generate(
             model=MODEL_SUMMARY,
             prompt="warmup",
-            options={"temperature": 0}
+            options={"num_predict": 1} #1トークン出力して終了
         )
-
         # ollama.generate(
         #     model=MODEL_TRANSLATE,
         #     prompt="warmup",
@@ -62,6 +62,7 @@ def warmup_model():
         # )
     except:
         pass
+    print("Finish warm up models")
 
 
 # --- Step 1: 構造化要約（at 英語） ---
@@ -71,7 +72,6 @@ def structure_summary_en(summary: str) -> dict:
 
                 Extract information ONLY from the input.
                 Do NOT add assumptions.
-                
                 
                 Return STRICT JSON only.
                 Do NOT change JSON Keys.
@@ -86,7 +86,6 @@ def structure_summary_en(summary: str) -> dict:
                     "evaluation": "",
                     "limitations": ""
                 }}
-                        
             === INPUT START ===
             {summary}
             === INPUT END ===
@@ -114,10 +113,9 @@ def translate_text_ja(text: str) -> str:
         Do NOT summarize.
         Do NOT add information.
         Return translation only.
-
-        === TEXT START ===
+        === INPUT START ===
         {text}
-        === TEXT END ===
+        === INPUT END ===
     """
     res = ollama.generate(
         # model=MODEL_TRANSLATE,
