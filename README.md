@@ -1,6 +1,8 @@
 # automatic_arXivPaper_translater
 ## このソースって何物？
 arXivの指定カテゴリで投稿された最新論文を、落合陽一フォーマットで要約し、日本語に翻訳することで、論文をより早く読むツールである。
+説明：https://qiita.com/nonono_qiita/items/a24f598a1e1da673fa13
+
 
 参考：[高速で論文がバリバリ読める落合先生のフォーマットがいい感じだったのでメモ](https://lafrenze.hatenablog.com/entry/2015/08/04/120205)
 
