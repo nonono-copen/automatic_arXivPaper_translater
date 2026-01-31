@@ -5,20 +5,13 @@ import csv
 import os
 from   datetime import datetime
 
-FOLDER_PATH = "../log"
-CSV_NAME    = "post_log.csv"
-CSV_PATH    = os.path.join(FOLDER_PATH, CSV_NAME)
+CSV_PATH    = "post_log.csv"
 FIELDS      = ["arxiv_id", "title", "summary", "posted_at", "qiita_url", "status"]
 
 #######################################################################
 # 初回時にCSVを生成
 #######################################################################
 def init_csv():
-    # CSVフォルダの存在確認＆なければフォルダごと作成
-    if not os.path.exists(FOLDER_PATH):
-        os.makedirs(FOLDER_PATH)
-        print(f"Created directory: {FOLDER_PATH}")
-
     # CSVファイルが存在しない場合、新規作成
     if not os.path.exists(CSV_PATH):
         with open(CSV_PATH, "w", newline="", encoding="utf-8") as f:

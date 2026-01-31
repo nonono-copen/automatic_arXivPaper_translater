@@ -6,7 +6,7 @@
 #           ・Qiitaへの投稿にはQiita APIを使用(投稿は非公開設定)
 # 　　　　　　・Qiitaへの投稿済か否かは論文IDで重複チェック
 # 　　　　　　・投稿管理用にCSVファイルを作成し、投稿履歴を管理
-#           ・開発者はRaspberry Pi4等での軽量環境を想定（これ重要）
+#           ・開発者はRaspberry Pi4やCodespaces等での軽量環境を想定（これ重要）
 # date      2026/01/30
 #######################################################################
 
@@ -19,7 +19,7 @@ from utils.qiita_publish    import make_intro_md,to_qiita_md, post_to_qiita
 
 # --- 定数 ---
 CATEGORY    = "cs.CV" # arXivカテゴリ ComputerVision&PatternRecognition
-MAX         = 3       # 取得論文数
+MAX         = 2       # 取得論文数
 QIITA_TAGS  = ["arXiv", "論文", "自動投稿"]      # Qiiita投稿用投稿用タグ
 DATE        = str(date.today())                # 投稿日付
 QIITA_TITLE = 'arXiv論文自動要約 投稿日：' + DATE # Qiiita投稿用投稿用タイトル
@@ -28,9 +28,9 @@ QIITA_TITLE = 'arXiv論文自動要約 投稿日：' + DATE # Qiiita投稿用投
 init_csv()                     # 投稿管理用CSVの準備
 mds = make_intro_md(date=DATE) # 投稿用markdown格納用
 warmup_model()                 # ollama model事前起動(ラスパイ等で初回起動が遅い場合対策)
-i = 0
-
-logs = []
+url = None                     # Qiita投稿URL格納用（投稿失敗時はNoneのまま）
+i    = 0                       # 処理論文数カウンタ
+logs = []                      # 投稿ログ格納用リスト
 
 # --- arXiv APIで最新論文情報を取得 ---
 papers = fetch_latest_arxiv(category=CATEGORY, max_results=MAX)
@@ -74,11 +74,11 @@ for p in papers:
     })
 
 
-# Qiitaに投稿
-url = post_to_qiita(title  =QIITA_TITLE,
-                    body   =mds,
-                    tags   =QIITA_TAGS,
-                    private=True)
+# Qiitaに投稿 （コメントアウト状態の場合、CSVログだけ保存）
+# url = post_to_qiita(title  =QIITA_TITLE,
+#                     body   =mds,
+#                     tags   =QIITA_TAGS,
+#                     private=True)
 
 # 投稿成功／失敗の判定
 if url == None:

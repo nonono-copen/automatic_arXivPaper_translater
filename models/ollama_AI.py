@@ -135,7 +135,7 @@ def translate_text_ja(text: str) -> str:
 def translate_json_ja(data: dict) -> dict:
     translated = {}
     for key in ["overview", "novelty", "key_method", "evaluation", "limitations"]:
-        value = data.get(key, "")
+        value = str(data.get(key, "")) # 中身が辞書型で渡されることを備えstr()で変換
         translated[key] = translate_text_ja(value)
     return translated
 
