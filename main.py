@@ -41,7 +41,7 @@ for p in papers:
     print(f"{i}: {pid}")
 
     # 過去に取得した論文IDと重複チェック
-    if is_already_posted(arxiv_id = pid):
+    if is_already_posted(pid):
         print(f"Skip:{pid} is already posted")
         continue # 投稿済論文IDならばスキップ    
 

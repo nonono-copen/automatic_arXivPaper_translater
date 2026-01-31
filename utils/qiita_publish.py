@@ -14,7 +14,7 @@ def make_intro_md(date):
     return f"""
 # はじめに／注意書き
 本記事は、arXivのComputer Vision & Pattern Recognitionの最新論文を自動取得し、AIで自動要約＆翻訳したものを自動投稿している。
-仕組み：xxxx
+仕組み：https://qiita.com/nonono_qiita/items/a24f598a1e1da673fa13
 
 論文は{date}時点のarXiv最新論文である。
 AIで要約＆翻訳されているため、一部翻訳されていなかったり、間違った表現や内容になっている。

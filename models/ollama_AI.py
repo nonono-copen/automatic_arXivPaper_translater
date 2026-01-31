@@ -65,31 +65,35 @@ def warmup_model():
     print("Finish warm up models")
 
 
-# --- Step 1: 構造化要約（at 英語） ---
+# Step 1: 構造化要約しJSON形式データを作成（英語）
+#######################################################################
+# args      text    : 要約対象の文章
+# return    result  : ollamaからのJSON回答結果
+#######################################################################
 def structure_summary_en(summary: str) -> dict:
     prompt = f"""
-                You are an academic paper analyzer.
+You are an academic paper analyzer.
+Your task is to extract information ONLY from the input.
 
-                Extract information ONLY from the input.
-                Do NOT add assumptions.
-                
-                Return STRICT JSON only.
-                Do NOT change JSON Keys.
-                No markdown.
-                No explanation.
-                
-                JSON format:
-                {{
-                    "overview": "",
-                    "novelty": "",
-                    "key_method": "",
-                    "evaluation": "",
-                    "limitations": ""
-                }}
-            === INPUT START ===
-            {summary}
-            === INPUT END ===
-        """
+STRICT RULES:
+- Do NOT add assumptions.
+- Return STRICT JSON only.
+- Do NOT change JSON Keys.
+- No markdown.
+- No explanation.
+- JSON format:
+    {{
+        "overview": "",
+        "novelty": "",
+        "key_method": "",
+        "evaluation": "",
+        "limitations": ""
+    }}
+
+INPUT:
+{summary}
+"""
+
     res = ollama.generate(
         model   = MODEL_SUMMARY,
         prompt  = prompt,
@@ -99,43 +103,54 @@ def structure_summary_en(summary: str) -> dict:
     result = progress_display(res)
     return json.loads(result)
 
-# # --- Step 2: 日本語翻訳 ---
-# #######################################################################
-# # args      text    : 要約対象の文章
-# # return    res     : ollamaからの回答結果
-# #######################################################################
-def translate_text_ja(text: str) -> str:
-    if not text.strip():
-        return ""
-
-    prompt = f"""
-        Translate the following academic text into natural Japanese.
-        Do NOT summarize.
-        Do NOT add information.
-        Return translation only.
-        === INPUT START ===
-        {text}
-        === INPUT END ===
-    """
-    res = ollama.generate(
-        # model=MODEL_TRANSLATE,
-        model   = MODEL_SUMMARY, # Codespaces等の軽量環境向けに軽量モデルを使用
-        prompt=prompt,
-        stream=True,
-        options={"temperature": 0.2}
-    )
-    result = progress_display(res)
-
-    return result
-
-
-
+# Step 2:JSONデータ（英語）に対し、キー毎に翻訳し、JSONデータ（日本語）を作成
+#######################################################################
+# args      data       : 要約したJSON形式の文章
+# return    translated : ollamaからの翻訳結果
+#######################################################################
 def translate_json_ja(data: dict) -> dict:
     translated = {}
     for key in ["overview", "novelty", "key_method", "evaluation", "limitations"]:
         value = str(data.get(key, "")) # 中身が辞書型で渡されることを備えstr()で変換
         translated[key] = translate_text_ja(value)
     return translated
+
+# Step 3: 日本語翻訳
+#######################################################################
+# args      text    : 翻訳対象の文章
+# return    result  : ollamaからの翻訳結果
+#######################################################################
+def translate_text_ja(text: str) -> str:
+    if not text.strip():
+        return ""
+
+    prompt = f"""
+You are a translation engine.
+Your task is to translate English into Japanese.
+
+STRICT RULES:
+- Output Japanese ONLY
+- Do NOT summarize
+- Do NOT explain
+- Do NOT output JSON
+- Do NOT keep English words
+
+TEXT:
+{text}
+"""
+    res = ollama.generate(
+        # model=MODEL_TRANSLATE,
+        model   = MODEL_SUMMARY, # Codespaces等の軽量環境向けに軽量モデルを使用
+        prompt=prompt,
+        stream=True,
+        options={"temperature": 0.0,
+                 "num_predict":900
+             }
+    )
+    result = progress_display(res)
+
+    return result
+
 
 
 if __name__ == "__main__":
