@@ -1,22 +1,24 @@
 # automatic_arXivPaper_translater
 ## このソースって何物？
 arXivの指定カテゴリで投稿された最新論文を、落合陽一フォーマットで要約し、日本語に翻訳することで、論文をより早く読むツールである。
+開発者がラズパイで毎週回し、Qiitaに結果を投稿している。
 
-説明：[arXiv最新論文の自動要約＆翻訳を作った](https://qiita.com/nonono_qiita/items/a24f598a1e1da673fa13)
+投稿先：まだ
 
-ちなみに
+仕組みの説明：[arXiv最新論文の自動要約＆翻訳を作った](https://qiita.com/nonono_qiita/items/a24f598a1e1da673fa13)
 
-落合陽一フォーマット参考：[高速で論文がバリバリ読める落合先生のフォーマットがいい感じだったのでメモ](https://lafrenze.hatenablog.com/entry/2015/08/04/120205)
+その他参考：
+落合陽一フォーマット：[高速で論文がバリバリ読める落合先生のフォーマットがいい感じだったのでメモ](https://lafrenze.hatenablog.com/entry/2015/08/04/120205)
 
-## Setup/
+## 自分で動かす場合
 ### 1. ライブラリやollamaのセットアップ
 ```
-./setup.sh
+$./setup.sh
 ```
 
 ## 実行方法
 ```
-python main.py
+$python main.py
 ```
 
 ## 出力
