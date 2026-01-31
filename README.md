@@ -8,6 +8,7 @@ arXivの指定カテゴリで投稿された最新論文を、落合陽一フォ
 仕組みの説明：[arXiv最新論文の自動要約＆翻訳を作った](https://qiita.com/nonono_qiita/items/a24f598a1e1da673fa13)
 
 その他参考：
+
 落合陽一フォーマット：[高速で論文がバリバリ読める落合先生のフォーマットがいい感じだったのでメモ](https://lafrenze.hatenablog.com/entry/2015/08/04/120205)
 
 ## 自分で動かす場合
