@@ -52,7 +52,7 @@ def warmup_model():
     try:
         res=ollama.generate(
             model=MODEL_SUMMARY,
-            prompt="warmup",
+            prompt=".",
             options={"num_predict": 1} #1トークン出力して終了
         )
         # ollama.generate(
