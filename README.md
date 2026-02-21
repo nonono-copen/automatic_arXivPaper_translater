@@ -3,7 +3,7 @@
 arXivの指定カテゴリで投稿された最新論文を、落合陽一フォーマットで要約し、日本語に翻訳することで、論文をより早く読むツールである。
 開発者がラズパイで毎週回し、Qiitaに結果を投稿している。
 
-投稿先：まだ
+投稿例：https://qiita.com/nonono_qiita/items/6db64145fbf2a6604944
 
 仕組みの説明：[arXiv最新論文の自動要約＆翻訳を作った](https://qiita.com/nonono_qiita/items/a24f598a1e1da673fa13)
 
