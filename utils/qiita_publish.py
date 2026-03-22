@@ -2,7 +2,7 @@ import os
 import requests
 
 QIITA_API_URL = "https://qiita.com/api/v2/items"
-QIITA_TOKEN = os.getenv("QIITA_TOKEN") # 環境変数からQiitaトークンを取得
+QIITA_TOKEN   = os.getenv("QIITA_TOKEN") # 環境変数からQiitaトークンを取得
 
 if not QIITA_TOKEN:
     raise RuntimeError("QIITA_TOKEN is not set")
@@ -25,7 +25,7 @@ AIで要約＆翻訳されているため、一部翻訳されていなかった
 def make_img_md(img_path):
     # 1. 画像アップロード
     url = "https://qiita.com/api/v2/uploads"
-    headers = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
+    headers = {"Authorization": f"Bearer {QIITA_TOKEN}"}
     files = {"image": open(img_path, "rb")}
     response = requests.post(url, headers=headers, files=files)
     response.raise_for_status()
