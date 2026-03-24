@@ -20,31 +20,11 @@ def make_intro_md(date):
 AIで要約＆翻訳されているため、一部翻訳されていなかったり、間違った表現や内容になっている。
 鵜呑みにせず、しっかりと自分の目で見極めてほしい。注意書きは以上！
 """
-
-# qiita投稿用の画像ファイル作成
-def make_img_md(img_path):
-    # 1. 画像アップロード
-    url = "https://qiita.com/api/v2/uploads"
-    headers = {"Authorization": f"Bearer {QIITA_TOKEN}"}
-    files = {"image": open(img_path, "rb")}
-    response = requests.post(url, headers=headers, files=files)
-    response.raise_for_status()
-
-    # 2. アップロードされたURLの取得
-    image_url = response.json()["url"]
-    # print(f"Uploaded Image URL: {image_url}")
-
-    # 3. 記事挿入用の画像パス作成
-    markdown_image_link = f"![image.png]({image_url})"
-    return markdown_image_link
-
 def to_qiita_md(arxiv_id, arxiv_url, title, authors, summary_ja, published,original_s, abst_fig=None):
     md = f"""
 # {title}
 - 著者  :{", ".join(auth for auth in authors)}
-
-- 概要図
-{abst_fig}
+![abstract_img]({abst_fig})
 
 ## 概要
 {summary_ja["overview"]}

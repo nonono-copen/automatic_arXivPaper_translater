@@ -352,4 +352,5 @@ if __name__ == "__main__":
     # 圧縮 → GitHub アップロード
     print(f"  処理中: {img_name}")
     compressed = compress_image(img_path)
-    image_url  = upload_image_to_github(compressed, repo_path, dry_run=True)
+    image_url  = upload_image_to_github(compressed, repo_path, dry_run=False)
+    print(image_url)

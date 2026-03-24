@@ -9,24 +9,30 @@
 #           ・開発者はRaspberry Pi4やCodespaces等での軽量環境を想定（これ重要）
 # date      2026/01/30
 #######################################################################
-
+import os
+import shutil
+from pathlib                import Path
 from datetime               import date
 from models.ollama_AI       import structure_summary_en, translate_json_ja,warmup_model
 from utils.get_arXiv_paper  import fetch_latest_arxiv, download_pdf
 from utils.get_figure       import ArxivFigureExtractor
 from utils.manage_log       import init_csv, is_already_posted, log_post
-from utils.qiita_publish    import make_intro_md,to_qiita_md, post_to_qiita, make_img_md
-import shutil
+from utils.qiita_publish    import make_intro_md,to_qiita_md, post_to_qiita
+from utils.post_img2github  import compress_image, upload_image_to_github
 
 # --- 定数 ---
-CATEGORY    = "cs.CV" # arXivカテゴリ ComputerVision&PatternRecognition
-MAX         = 2       # 取得論文数
-QIITA_TAGS  = ["arXiv", "論文", "自動投稿"]      # Qiiita投稿用投稿用タグ
-DATE        = str(date.today())                # 投稿日付
-QIITA_TITLE = 'arXiv論文自動要約 投稿日：' + DATE # Qiiita投稿用投稿用タイトル
-PDF_DIR     = './pdf/'
-EXT_FIG_DIR = './extracted_figures/'
-
+CATEGORY        = "cs.CV" # arXivカテゴリ ComputerVision&PatternRecognition
+MAX             = 2       # 取得論文数
+QIITA_TAGS      = ["arXiv", "論文", "自動投稿"]      # Qiiita投稿用投稿用タグ
+TOKEN_GITHUB    = os.environ["TOKEN_GITHUB"]
+USER_GITHUB     = os.environ["USER_GITHUB"]
+REPO_GITHUB     = os.environ["REPO_GITHUB"]
+BRANCH_GITHUB   = os.environ.get("BRANCH_GITHUB", "main")
+DATE            = str(date.today())                # 投稿日付
+QIITA_TITLE     = 'arXiv論文自動要約 投稿日：' + DATE # Qiiita投稿用投稿用タイトル
+PDF_DIR         = './pdf/'
+EXT_FIG_DIR     = './extracted_figures/'
+REPO_BASE_PATH  = "automatic_arXiv_translate" # GitHubリポジトリ内のベースパス
 init_csv()                     # 投稿管理用CSVの準備
 mds = make_intro_md(date=DATE) # 投稿用markdown格納用
 warmup_model()                 # ollama model事前起動(ラスパイ等で初回起動が遅い場合対策)
@@ -61,11 +67,24 @@ for p in papers:
 
     # 論文内の1枚目画像を抽出
     extractor    = ArxivFigureExtractor(pdf_path=pdf_save_path, output_dir=EXT_FIG_DIR, dpi=150)
-    ext_fig_path = extractor.extract_best_overview_figure(max_pages=5, include_caption=False)
+    ext_fig_path = extractor.extract_best_overview_figure(max_pages=5, include_caption=False, paper_id=pid)
     del extractor # メモリ節約のためインスタンスを削除
 
-    # Qiita投稿用の画像ファイル作成
-    # abst_fig_md = make_img_md(img_path = ext_fig_path)
+    # Qiita投稿用の画像ファイルを専用githubリポジトリにpush
+    if ext_fig_path is not None:
+        img_name = os.path.basename(ext_fig_path)
+        date = date.today()
+        repo_path = f"{REPO_BASE_PATH}/{date}/{img_name}"
+
+        # 圧縮 → GitHub アップロード
+        print(f"  画像圧縮処理中: {ext_fig_path}")
+        ext_fig_path = Path(ext_fig_path)
+        compressed = compress_image(ext_fig_path)
+        image_url  = upload_image_to_github(compressed, repo_path, dry_run=False)
+    else:
+        print("Cannot extract figure")
+        image_url = None
+
 
     # markdownに変換 ＆ Qiita apiで投稿
     md = to_qiita_md(
@@ -76,7 +95,7 @@ for p in papers:
         summary_ja = summary_ja, 
         published  = p["published"],
         original_s = p["summary"],
-        abst_fig   = abst_fig_md)
+        abst_fig   = image_url)
     mds += md    # 複数論文をまとめて投稿する場合に備えて連結
 
     logs.append({
@@ -89,10 +108,10 @@ for p in papers:
 
 
 # Qiitaに投稿 （コメントアウト状態の場合、CSVログだけ保存）
-# url = post_to_qiita(title  =QIITA_TITLE,
-#                     body   =mds,
-#                     tags   =QIITA_TAGS,
-#                     private=True)
+url = post_to_qiita(title  =QIITA_TITLE,
+                    body   =mds,
+                    tags   =QIITA_TAGS,
+                    private=True)
 
 # 投稿成功／失敗の判定
 if url == None:

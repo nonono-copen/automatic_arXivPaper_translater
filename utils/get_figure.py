@@ -3,7 +3,6 @@
 ArXiv論文PDFから最も概要図である可能性が高い1枚のみを抽出
 Raspberry Pi 4 (4GB) 対応版
 """
-
 import os
 import re
 import fitz  # PyMuPDF
@@ -212,7 +211,8 @@ class ArxivFigureExtractor:
     
     def extract_figure_as_image(self, page_num: int, rect: fitz.Rect, fig_num: str, 
                                include_caption: bool = False, 
-                               caption_bbox: Optional[fitz.Rect] = None) -> str:
+                               caption_bbox: Optional[fitz.Rect] = None,
+                               paper_id = "sample") -> str:
         """指定された領域を画像として抽出"""
         page = self.doc[page_num]
         
@@ -235,16 +235,17 @@ class ArxivFigureExtractor:
         
         # 保存
         suffix = "_with_caption" if include_caption else ""
-        filename = f"overview_figure_{fig_num}{suffix}_page_{page_num+1}.png"
+        filename = f"{paper_id}_{fig_num}{suffix}_page_{page_num+1}.png"
         filepath = self.output_dir / filename
         pix.save(filepath)
         
         file_size = os.path.getsize(filepath)
         print(f"保存: {filename} ({file_size/1024:.1f} KB, {pix.width}x{pix.height})")
-        
-        return str(filepath)
+        # print(filepath)
+        # return str(filepath)
+        return str(filename)
     
-    def extract_best_overview_figure(self, max_pages: int = 5, include_caption: bool = True) -> str:
+    def extract_best_overview_figure(self, max_pages: int = 5, include_caption: bool = True, paper_id="sample") -> str:
         """最も概要図である可能性が高い1枚を抽出"""
         self.open_pdf()
         
@@ -278,7 +279,7 @@ class ArxivFigureExtractor:
             
             if not all_candidates:
                 print("\n図が見つかりませんでした。")
-                return
+                return None
             
             # スコアでソートして最高得点の図を選択
             best_figure = max(all_candidates, key=lambda x: x['score'])
@@ -304,7 +305,8 @@ class ArxivFigureExtractor:
                     image_path = self.extract_figure_as_image(
                         page_num, figure_rect, best_figure['fig_num'],
                         include_caption=include_caption,
-                        caption_bbox=caption_bbox
+                        caption_bbox=caption_bbox,
+                        paper_id = paper_id
                     )
                     
                     # キャプションをテキストファイルに保存
